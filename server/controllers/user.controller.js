@@ -47,9 +47,7 @@ module.exports.getUser = (request, response) => {
 
 
 module.exports.updateUser = (request, response) => {
-
-    const { newLeaguePicks, leagueID, weekID, weekPicks } = request.body
-
+    const { newLeaguePicks, leagueID, weekPicks } = request.body
     let newPicks = {}
     User.find({ _id: request.params.id }).populate("leagues")
         .then(user => { 

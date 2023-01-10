@@ -1,3 +1,5 @@
+
+// this line imports the Mongoose library, which is used for interacting with MongoDB databases in Node.js.
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const Schema = mongoose.Schema
@@ -36,6 +38,8 @@ const UserSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
+
+// this creates a temp var and grabs from the form what we called 'confirm password' and sets it to be later compared in the next function to password
 UserSchema.virtual('confirmPassword')
     .get(() => this._confirmPassword)
     .set(value => this._confirmPassword = value);
@@ -54,10 +58,6 @@ UserSchema.pre('save', function (next) {
             next();
         });
 });
-
-
-
-
 
 module.exports.User = mongoose.model('User', UserSchema);
 

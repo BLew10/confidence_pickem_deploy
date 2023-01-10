@@ -19,14 +19,6 @@ const LeagueSchema = new mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref:"User"
     }
-    //weeks is going to be an object where the keys are the week number and the values is an array of the objects containing userId and picks for that week
-    //weeks: {
-    //     1: [{userid: id, picks}, ....]
-    //     2: [{userid: id, picks}, ....]
-    // }
-    // weeks: {
-    //     type: Object
-    // }
 }, { timestamps: true });
 
 LeagueSchema.virtual('confirmPassword')
@@ -39,7 +31,7 @@ LeagueSchema.pre('validate', function (next) {
     }
     next();
 });
-
+ 
 LeagueSchema.pre('save', function (next) {
     bcrypt.hash(this.password, 10)
         .then(hash => {
