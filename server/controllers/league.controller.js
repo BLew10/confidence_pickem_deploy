@@ -4,12 +4,6 @@ const { User } = require('../models/user.model');
 const bcrypt = require('bcrypt');
 
 
-module.exports.index = (request, response) => {
-    response.json({
-        message: "Hello World"
-    });
-}
-
 module.exports.createLeague = (request, response) => {
     League.exists({ name: request.body.name.toLowerCase() })
         .then(leagueExists => {
@@ -43,7 +37,7 @@ module.exports.addUserToNewLeague = (request, response) => {
 
     User.findOneAndUpdate({ _id: userID }, { $push: { leagues: request.params.id } }, { new: true, useFindAndModify: false })
         .then(updatedLeague => {
-            console.log(updatedLeague)
+            response.json(updatedLeague)
         })
         .catch(err => console.log(err))
     
@@ -60,17 +54,15 @@ module.exports.addUserToExistingLeague = async (req, res) => {
     const correctPassword = await bcrypt.compare(req.body.password, league.password);
 
     if (!correctPassword) {
-        console.log("Wrong Password")
         return res.status(400).json({ msg: "Wrong password" });
     }
 
     const userInLeague = await League.exists({_id: req.params.id, users: { $in: [userID] } });
 
         if (userInLeague) {
-            console.log("You are already in this league")
             res.json({ message: "You are already in this league" })
         } else {
-            console.log("Added to the league")
+         
             League.findOneAndUpdate({ _id: req.params.id  }, { $push: { users: userID } }, { new: true, useFindAndModify: false })
                 .then(updatedLeague => {
                     res.json(updatedLeague, "User has been added to league")
