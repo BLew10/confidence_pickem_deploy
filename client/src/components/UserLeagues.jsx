@@ -1,38 +1,28 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react'
-import {
-    Routes,
-    Route,
-    Link,
-    useNavigate,
-    Navigate
-} from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import './teams.css'
-
+import { GetUser } from '../context/LoggedInUser';
 
 const UserLeagues = (props) => {
     const { handleLeague } = props
-    const [leagues, setLeagues] = useState([])
+    const  currentUser  = GetUser() 
+    console.log(GetUser())
+    console.log(currentUser)
+    let leagues = [...currentUser.leagues]
     const navigate = useNavigate()
-    const [user, setUser] = useState()
-    let [currentLeague, setCurrentLeague] = useState({})
+    const [currentLeague, setCurrentLeague] = useState({})
 
 
     useEffect(() => {
-        axios.get(`http://localhost:8000/api/users/getloggedinuser`, { withCredentials: true })
-            .then(res => {
-                setUser(res.data.results)
-                setLeagues(res.data.results.leagues)
-                console.log(res.data.results.leagues)
-                let currLeague = {}
-                for (let league in res.data.results.leagues) {
-                    currLeague[league._id] = false
-                }
-                setCurrentLeague({ ...currLeague })
-            })
-            .catch(err => console.log(err))
-
-    }, [])
+        let currLeague = {}
+        if (currentUser && currentUser.leagues) {
+            for (let league in currentUser.leagues) {
+                currLeague[league._id] = false
+            }
+        }
+        setCurrentLeague({ ...currLeague })
+    }, [currentUser])
 
     const handleClick = (e, leagueID) => {
         currentLeague = Object.keys(currentLeague).reduce((accumulator, key) => {
@@ -45,7 +35,7 @@ const UserLeagues = (props) => {
     }
 
 
-    return leagues.length !== 0 ? (
+    return leagues && leagues.length !== 0 ? (
         <div className='flex flex-col w-full lg:w-1/2 mx-auto rounded shadow-lg shadow-[#98b9ff] '>
             <div className='text-center text-2xl bg-[#181042] font-bold text-white rounded-t-lg p-2'>Current Leagues</div>
             {leagues.map(league =>

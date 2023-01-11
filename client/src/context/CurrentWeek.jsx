@@ -24,7 +24,6 @@ export function WeekProvider({ children }){
     useEffect(() => {
         const date = new Date()
         let current = date.getTime()
-        console.log(current)
 
     }, []);
 
