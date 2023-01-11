@@ -7,8 +7,6 @@ import { GetUser } from '../context/LoggedInUser';
 const UserLeagues = (props) => {
     const { handleLeague } = props
     const  currentUser  = GetUser() 
-    console.log(GetUser())
-    console.log(currentUser)
     let leagues = [...currentUser.leagues]
     const navigate = useNavigate()
     const [currentLeague, setCurrentLeague] = useState({})
@@ -25,11 +23,11 @@ const UserLeagues = (props) => {
     }, [currentUser])
 
     const handleClick = (e, leagueID) => {
-        currentLeague = Object.keys(currentLeague).reduce((accumulator, key) => {
+        let newCurrentLeague = Object.keys(currentLeague).reduce((accumulator, key) => {
             return { ...accumulator, [key]: false };
         }, {});
-        currentLeague[e.target.id] = true
-        setCurrentLeague({ ...currentLeague })
+        newCurrentLeague[e.target.id] = true
+        setCurrentLeague({ ...newCurrentLeague })
         handleLeague(leagueID)
 
     }
